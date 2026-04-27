@@ -1,0 +1,32 @@
+/* resources/css/app.css
+   Entry point untuk Tailwind CSS — dikompilasi oleh Vite
+   Custom styles yang bergantung pada komponen ada di public/css/lapordong.css
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base layer overrides */
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+    body {
+        font-family: 'DM Sans', sans-serif;
+        color: #1E293B;
+        background-color: #F8FAFC;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+}
+
+/* Utility components */
+@layer components {
+    .container-lapordong {
+        @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    }
+}
