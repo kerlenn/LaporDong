@@ -3,50 +3,49 @@
 
 @section('konten')
 
-{{-- Hero --}}
-<section style="padding: 4rem 1rem 5rem; background: linear-gradient(135deg, var(--warna-indigo) 0%, var(--warna-cobalt) 60%, #0EA5E9 100%); position: relative; overflow: hidden;">
-    <div style="position: absolute; top: -80px; right: -80px; width: 300px; height: 300px; border-radius: 50%; background: rgba(255,255,255,0.05);"></div>
-    <div style="position: absolute; bottom: -60px; left: 10%; width: 200px; height: 200px; border-radius: 50%; background: rgba(255,255,255,0.04);"></div>
-    <div style="max-width: 700px; margin: 0 auto; text-align: center; position: relative;">
-        <h1 style="ld-hero__judul"> 
-            Eksplorasi Laporan
-        </h1>
-        <p style="ld-hero__desc">
-            Pantau kerusakan jalan di seluruh Indonesia, beri ulasan, dan nilai kinerja pemerintah daerahmu.
-        </p>
+<div class="ld-page-wrapper">
+    <div class="ld-container ld-container-wide">
 
-        {{-- Search Bar --}}
-        <form method="GET" action="{{ route('eksplorasi') }}">
-            <div style="display: flex; gap: 0.5rem; max-width: 500px; margin: 0 auto;">
-                <input type="text" name="cari" value="{{ request('cari') }}"
-                    placeholder="Cari nama jalan, kota, atau daerah..."
-                    style="flex: 1; padding: 0.875rem 1.25rem; border-radius: 100px; border: none; font-size: 0.9375rem; outline: none; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
-                <button type="submit" style="padding: 0.875rem 1.5rem; background: white; color: var(--warna-indigo); border: none; border-radius: 100px; font-weight: 700; cursor: pointer; white-space: nowrap;">
-                    🔍 Cari
-                </button>
-            </div>
-        </form>
-    </div>
-</section>
+        {{-- Hero Banner (Sama dengan Statistik) --}}
+        <div class="ld-hero-wrapper">
+            <h1 class="ld-hero__judul">
+                <span class="aksen">Eksplorasi Laporan</span>
+            </h1>
+            <p class="ld-hero__desc ld-hero__desc-custom">
+                Pantau kerusakan jalan di seluruh Indonesia, beri ulasan, dan nilai kinerja pemerintah.
+            </p>
 
-<div style="background: var(--warna-latar); padding: 2rem 1rem 4rem; min-height: 60vh;">
-    <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 280px 1fr; gap: 2rem; margin-top: -2rem;">
+            {{-- SEARCH --}}
+            <form method="GET" action="{{ route('eksplorasi') }}" class="ld-search" style="margin-top: 2rem;">
+                <div class="ld-search__wrapper">
+                    <input 
+                        type="text" 
+                        name="cari" 
+                        value="{{ request('cari') }}"
+                        placeholder="Cari nama jalan, kota, atau daerah..."
+                        class="ld-search__input"
+                    >
+                    <button type="submit" class="ld-btn ld-btn--primer">Cari</button>
+                </div>
+            </form>
+        </div>
 
-        {{-- SIDEBAR FILTER --}}
-        <div style="position: sticky; top: 6rem; height: fit-content;">
-            <form method="GET" action="{{ route('eksplorasi') }}" id="filterForm">
-                @if(request('cari'))
-                    <input type="hidden" name="cari" value="{{ request('cari') }}">
-                @endif
+        {{-- Konten Eksplorasi Grid (Sidebar & Feed) --}}
+        <div class="ld-eksplorasi__grid" style="margin-top: 0;">
 
-                {{-- Filter Card --}}
-                <div style="background: white; border-radius: 16px; padding: 1.25rem; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 1rem;">
-                    <h3 style="font-weight: 700; font-size: 0.875rem; color: var(--warna-indigo); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">🔽 Filter</h3>
+            {{-- SIDEBAR FILTER --}}
+            <aside class="ld-filter">
+                <form method="GET" action="{{ route('eksplorasi') }}" id="filterForm" class="ld-filter__card">
 
-                    <div style="margin-bottom: 1rem;">
-                        <label style="font-size: 0.8125rem; font-weight: 600; color: var(--warna-teks); display: block; margin-bottom: 0.375rem;">Provinsi</label>
-                        <select name="provinsi" onchange="document.getElementById('filterForm').submit()"
-                            style="width: 100%; padding: 0.5rem 0.75rem; border: 1.5px solid #E5E7EB; border-radius: 10px; font-size: 0.875rem; outline: none;">
+                    @if(request('cari'))
+                        <input type="hidden" name="cari" value="{{ request('cari') }}">
+                    @endif
+
+                    <h3 class="ld-filter__title">Filter</h3>
+
+                    <div class="ld-filter__group">
+                        <label>Provinsi</label>
+                        <select name="provinsi" onchange="this.form.submit()" class="ld-input">
                             <option value="">Semua Provinsi</option>
                             @foreach($daftarProvinsi as $prov)
                                 <option value="{{ $prov }}" {{ request('provinsi') === $prov ? 'selected' : '' }}>{{ $prov }}</option>
@@ -54,10 +53,9 @@
                         </select>
                     </div>
 
-                    <div style="margin-bottom: 1rem;">
-                        <label style="font-size: 0.8125rem; font-weight: 600; color: var(--warna-teks); display: block; margin-bottom: 0.375rem;">Kota / Kabupaten</label>
-                        <select name="kota" onchange="document.getElementById('filterForm').submit()"
-                            style="width: 100%; padding: 0.5rem 0.75rem; border: 1.5px solid #E5E7EB; border-radius: 10px; font-size: 0.875rem; outline: none;">
+                    <div class="ld-filter__group">
+                        <label>Kota / Kabupaten</label>
+                        <select name="kota" onchange="this.form.submit()" class="ld-input">
                             <option value="">Semua Kota</option>
                             @foreach($daftarKota as $kota)
                                 <option value="{{ $kota }}" {{ request('kota') === $kota ? 'selected' : '' }}>{{ $kota }}</option>
@@ -65,247 +63,258 @@
                         </select>
                     </div>
 
-                    <div style="margin-bottom: 1rem;">
-                        <label style="font-size: 0.8125rem; font-weight: 600; color: var(--warna-teks); display: block; margin-bottom: 0.375rem;">Status</label>
+                    <div class="ld-filter__group">
+                        <label>Status</label>
                         @php
                             $statusList = [
-                                ''             => 'Semua Status',
-                                'dikirim'      => '📤 Dikirim',
-                                'diverifikasi' => '✔️ Diverifikasi',
-                                'diproses'     => '🔧 Diproses',
-                                'selesai'      => '✅ Selesai',
+                                '' => 'Semua Status',
+                                'dikirim' => 'Dikirim',
+                                'diverifikasi' => 'Diverifikasi',
+                                'diproses' => 'Diproses',
+                                'selesai' => 'Selesai',
                             ];
                         @endphp
                         @foreach($statusList as $val => $label)
-                            <label style="display: flex; align-items: center; gap: 0.5rem; padding: 0.375rem 0; cursor: pointer; font-size: 0.875rem;">
+                            <label class="ld-radio">
                                 <input type="radio" name="status" value="{{ $val }}"
-                                    {{ request('status', '') === $val ? 'checked' : '' }}
-                                    onchange="document.getElementById('filterForm').submit()">
-                                {{ $label }}
+                                    {{ request('status','') === $val ? 'checked' : '' }}
+                                    onchange="this.form.submit()">
+                                <span>{{ $label }}</span>
                             </label>
                         @endforeach
                     </div>
 
-                    <div>
-                        <label style="font-size: 0.8125rem; font-weight: 600; color: var(--warna-teks); display: block; margin-bottom: 0.375rem;">Urutkan</label>
-                        <select name="sort" onchange="document.getElementById('filterForm').submit()"
-                            style="width: 100%; padding: 0.5rem 0.75rem; border: 1.5px solid #E5E7EB; border-radius: 10px; font-size: 0.875rem; outline: none;">
-                            <option value="terbaru" {{ request('sort','terbaru') === 'terbaru' ? 'selected' : '' }}>🕐 Terbaru</option>
-                            <option value="tertua" {{ request('sort') === 'tertua' ? 'selected' : '' }}>📅 Terlama</option>
-                            <option value="bintang" {{ request('sort') === 'bintang' ? 'selected' : '' }}>⭐ Rating Tertinggi</option>
+                    <div class="ld-filter__group">
+                        <label>Urutkan</label>
+                        <select name="sort" onchange="this.form.submit()" class="ld-input">
+                            <option value="terbaru" {{ request('sort','terbaru') === 'terbaru' ? 'selected' : '' }}>Terbaru</option>
+                            <option value="tertua" {{ request('sort') === 'tertua' ? 'selected' : '' }}>Terlama</option>
+                            <option value="bintang" {{ request('sort') === 'bintang' ? 'selected' : '' }}>Rating Tertinggi</option>
                         </select>
                     </div>
-                </div>
 
-                {{-- Reset --}}
-                @if(request()->hasAny(['kota','provinsi','status','cari','sort']))
-                    <a href="{{ route('eksplorasi') }}" style="display: block; text-align: center; padding: 0.625rem; background: #FEF2F2; color: #DC2626; border-radius: 10px; font-size: 0.875rem; font-weight: 600; text-decoration: none;">
-                        ✕ Reset Filter
-                    </a>
-                @endif
-            </form>
-        </div>
-
-        {{-- FEED UTAMA --}}
-        <div>
-            {{-- Info hasil --}}
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
-                <div style="font-size: 0.875rem; color: var(--warna-teks-muted);">
-                    Menampilkan <strong style="color: var(--warna-indigo);">{{ $laporan->total() }}</strong> laporan
-                    @if(request('kota')) di <strong>{{ request('kota') }}</strong> @endif
-                    @if(request('provinsi')) · <strong>{{ request('provinsi') }}</strong> @endif
-                </div>
-            </div>
-
-            @forelse($laporan as $item)
-            @php
-                $statusColor = match($item->status) {
-                    'selesai'      => ['bg' => '#ECFDF5', 'text' => '#065F46', 'border' => '#6EE7B7'],
-                    'diproses'     => ['bg' => '#FFF7ED', 'text' => '#9A3412', 'border' => '#FED7AA'],
-                    'diverifikasi' => ['bg' => '#EFF6FF', 'text' => '#1E40AF', 'border' => '#BFDBFE'],
-                    default        => ['bg' => '#F9FAFB', 'text' => '#374151', 'border' => '#E5E7EB'],
-                };
-                $prioritasColor = match($item->prioritas_ai) {
-                    'tinggi' => '#DC2626',
-                    'sedang' => '#D97706',
-                    'rendah' => '#059669',
-                    default  => '#6B7280',
-                };
-                $foto = is_array($item->foto_sebelum) ? ($item->foto_sebelum[0] ?? null) : $item->foto_sebelum;
-            @endphp
-
-            <div style="background: white; border-radius: 16px; padding: 1.25rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 1rem; border: 1px solid #F3F4F6; transition: box-shadow 0.2s;"
-                onmouseover="this.style.boxShadow='0 4px 20px rgba(0,0,0,0.1)'"
-                onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.05)'">
-
-                {{-- Header card --}}
-                <div style="display: flex; gap: 1rem; align-items: flex-start;">
-                    {{-- Foto --}}
-                    @if($foto)
-                        <img src="{{ asset('storage/' . $foto) }}" alt="Foto"
-                            style="width: 80px; height: 80px; object-fit: cover; border-radius: 12px; flex-shrink: 0; border: 1px solid #F3F4F6;">
-                    @else
-                        <div style="width: 80px; height: 80px; background: #F3F4F6; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; flex-shrink: 0;">🛣️</div>
+                    @if(request()->hasAny(['kota','provinsi','status','cari','sort']))
+                        <div style="margin-top: 1.5rem;">
+                            <a href="{{ route('eksplorasi') }}" class="ld-btn ld-btn--ghost" style="width: 100%; text-align: center;">Reset Filter</a>
+                        </div>
                     @endif
+                </form>
+            </aside>
 
-                    <div style="flex: 1; min-width: 0;">
-                        {{-- Status & prioritas badges --}}
-                        <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
-                            <span style="font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.625rem; border-radius: 100px; background: {{ $statusColor['bg'] }}; color: {{ $statusColor['text'] }}; border: 1px solid {{ $statusColor['border'] }};">
-                                {{ $item->label_status }}
-                            </span>
-                            @if($item->prioritas_ai)
-                                <span style="font-size: 0.7rem; font-weight: 600; color: {{ $prioritasColor }};">
-                                    ● {{ $item->label_prioritas }}
-                                </span>
-                            @endif
-                            <span style="font-size: 0.7rem; color: var(--warna-teks-muted); margin-left: auto;">
-                                {{ $item->created_at->diffForHumans() }}
-                            </span>
-                        </div>
+            {{-- FEED UTAMA --}}
+            <main class="ld-feed">
 
-                        {{-- Judul --}}
-                        <h3 style="font-weight: 700; font-size: 0.9375rem; color: var(--warna-teks); line-height: 1.4; margin-bottom: 0.375rem;">
-                            {{ $item->judul }}
-                        </h3>
-
-                        {{-- Lokasi --}}
-                        <div style="font-size: 0.8125rem; color: var(--warna-teks-muted);">
-                            📍 {{ $item->kecamatan }}, {{ $item->kota }}, {{ $item->provinsi }}
-                        </div>
-                    </div>
+                <div class="ld-feed__info">
+                    Menampilkan <strong>{{ $laporan->total() }}</strong> laporan
                 </div>
 
-                {{-- Deskripsi --}}
-                <p style="font-size: 0.875rem; color: var(--warna-teks-muted); margin: 0.875rem 0; line-height: 1.6;">
-                    {{ Str::limit($item->deskripsi, 150) }}
-                </p>
+                @forelse($laporan as $item)
+                @php
+                    $statusColor = match($item->status) {
+                        'dikirim'     => 'ld-badge--dikirim',
+                        'diverifikasi'=> 'ld-badge--diverifikasi',
+                        'diproses'    => 'ld-badge--diproses',
+                        'selesai'     => 'ld-badge--selesai',
+                        'ditolak'     => 'ld-badge--ditolak',
+                        default       => '',
+                    };
+                    $prioritasColor = match($item->prioritas_ai) {
+                        'tinggi' => 'ld-priority--high',
+                        'sedang' => 'ld-priority--medium',
+                        'rendah' => 'ld-priority--low',
+                        default  => '',
+                    };
+                    $foto = is_array($item->foto_sebelum) ? ($item->foto_sebelum[0] ?? null) : $item->foto_sebelum;
+                @endphp
 
-                {{-- Footer card --}}
-                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; padding-top: 0.875rem; border-top: 1px solid #F9FAFB;">
-                    <div style="display: flex; align-items: center; gap: 1rem;">
-                        {{-- Pelapor --}}
-                        <div style="display: flex; align-items: center; gap: 0.375rem;">
-                            <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--warna-indigo); display: flex; align-items: center; justify-content: center; color: white; font-size: 0.65rem; font-weight: 700;">
-                                {{ strtoupper(substr($item->pelapor?->nama ?? 'A', 0, 1)) }}
-                            </div>
-                            <span style="font-size: 0.8rem; color: var(--warna-teks-muted);">{{ $item->pelapor?->nama ?? 'Anonim' }}</span>
+                <article class="ld-card-eksplorasi">
+
+                    {{-- HEAD --}}
+                    <div class="ld-card__head">
+                        <div class="ld-card__media">
+                            @if($foto)
+                                <img src="{{ asset('storage/' . $foto) }}" class="ld-card__img" alt="Foto laporan">
+                            @else
+                                <div class="ld-card__img ld-card__img--placeholder">
+                                    <span>🛣️</span>
+                                </div>
+                            @endif
                         </div>
 
-                        {{-- Ulasan --}}
-                        @if($item->ulasan)
-                            <div style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.8rem;">
-                                <span style="color: #F59E0B;">★</span>
-                                <span style="font-weight: 600; color: var(--warna-teks);">{{ $item->ulasan->bintang }}/5</span>
-                                <span style="color: var(--warna-teks-muted);">rating warga</span>
+                        <div class="ld-card__content">
+                            <div class="ld-card__top">
+                                <div class="ld-card__badges">
+                                    <span class="ld-badge {{ $statusColor }}">{{ $item->label_status }}</span>
+                                    @if($item->prioritas_ai)
+                                        <span class="ld-priority {{ $prioritasColor }}">{{ $item->label_prioritas }}</span>
+                                    @endif
+                                </div>
+                                <span class="ld-time">{{ $item->created_at->diffForHumans() }}</span>
                             </div>
-                        @endif
+                            <h3 class="ld-card__title">{{ $item->judul }}</h3>
+                            <p class="ld-location">{{ $item->kecamatan }}, {{ $item->kota }}, {{ $item->provinsi }}</p>
+                        </div>
                     </div>
 
-                    {{-- Tombol aksi --}}
-                    <div style="display: flex; gap: 0.5rem;">
-                        @auth
-                            @if($item->status === 'selesai' && !$item->ulasan)
-                                <button onclick="toggleUlasan('ulasan-{{ $item->id }}')"
-                                    style="padding: 0.375rem 0.875rem; background: #FFF7ED; color: #D97706; border: 1px solid #FED7AA; border-radius: 100px; font-size: 0.8rem; font-weight: 600; cursor: pointer;">
-                                    ⭐ Beri Ulasan
-                                </button>
-                            @elseif($item->status === 'selesai' && $item->ulasan)
-                                <span style="padding: 0.375rem 0.875rem; background: #ECFDF5; color: #065F46; border: 1px solid #6EE7B7; border-radius: 100px; font-size: 0.8rem; font-weight: 600;">
-                                    ✓ Sudah Diulas
-                                </span>
+                    {{-- DESC --}}
+                    <p class="ld-card__desc">{{ Str::limit($item->deskripsi, 150) }}</p>
+                    
+
+                    <div class="ld-divider"></div>
+
+                    {{-- FOOTER: user + rating sejajar --}}
+                    <div class="ld-card__footer">
+                        <div class="ld-user">
+                            <div class="ld-user__avatar">
+                                {{ strtoupper(substr($item->pelapor?->nama_lengkap ?? 'U', 0, 1)) }}
+                            </div>
+                            <span class="ld-user__name">{{ $item->pelapor?->nama_lengkap }}</span>
+                        </div>
+
+                        <div class="ld-rating-display">
+                            @if($item->ulasan?->bintang)
+                                <div class="ld-stars">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <span class="ld-star {{ $item->ulasan->bintang >= $i ? 'is-active' : '' }}">★</span>
+                                    @endfor
+                                </div>
+                                <span class="ld-rating__value">{{ $item->ulasan->bintang }}/5</span>
+                            @else
+                                <span class="ld-rating__empty">Belum ada ulasan</span>
                             @endif
-                        @else
+                        </div>
+                    </div>
+
+                    <div class="ld-divider"></div>
+
+                    {{-- ACTION SECTION --}}
+                    <div class="ld-card__action">
+
+                        <a href="{{ route('laporan.detail', $item->id) }}" class="ld-btn ld-btn--primer">
+                            Lihat Detail
+                        </a>
+
+                        @guest
+                            {{-- Belum login --}}
                             @if($item->status === 'selesai')
-                                <a href="{{ route('masuk') }}"
-                                    style="padding: 0.375rem 0.875rem; background: #F3F4F6; color: var(--warna-teks-muted); border-radius: 100px; font-size: 0.8rem; text-decoration: none;">
-                                    Login untuk beri ulasan
-                                </a>
+                                <div class="ld-gate">
+                                    <span class="ld-gate__text">Mau kasih ulasan atau rating?</span>
+                                    <a href="{{ route('masuk') }}" class="ld-gate__link">Masuk dulu</a>
+                                </div>
+                            @else
+                                <div class="ld-gate">
+                                    <span class="ld-gate__text">
+                                        Laporan sedang <strong>{{ $item->label_status }}</strong>. Ulasan bisa diberikan setelah status <strong>Selesai</strong>.
+                                    </span>
+                                </div>
+                            @endif
+                        @endguest
+
+                        @auth
+                            {{-- Sudah login --}}
+                            @if($item->status === 'selesai')
+                                <div class="ld-comment-form__label">Beri ulasanmu</div>
+                                
+                                {{-- Menampilkan Error Global jika Validasi Gagal --}}
+                                @if($errors->any())
+                                    <div style="background: #fee2e2; color: #991b1b; padding: 10px; border-radius: 6px; margin-bottom: 15px; font-size: 0.9rem;">
+                                        Gagal mengirim ulasan. Pastikan bintang dan komentar sudah diisi!
+                                    </div>
+                                @endif
+
+                                <form method="POST" action="{{ route('eksplorasi.ulasan', $item->id) }}" class="ld-comment-form">
+                                    @csrf
+                                    <div class="ld-stars-input" data-form="{{ $item->id }}" style="display: flex; gap: 4px; margin-bottom: 5px;">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <span class="ld-star-input" data-value="{{ $i }}" style="cursor: pointer; font-size: 24px; color: #E2E8F0;">★</span>
+                                        @endfor
+                                        <input type="hidden" name="bintang" required>
+                                    </div>
+                                    @error('bintang')
+                                        <div style="color: red; font-size: 0.85rem; margin-bottom: 10px;">{{ $message }}</div>
+                                    @enderror
+
+                                    <textarea name="komentar" placeholder="Tulis pengalamanmu tentang perbaikan jalan ini..." rows="2" class="ld-textarea" style="min-height: 80px;"></textarea>
+                                    @error('komentar')
+                                        <div style="color: red; font-size: 0.85rem; margin-top: 5px;">{{ $message }}</div>
+                                    @enderror
+
+                                    <div class="ld-comment-form__row" style="justify-content: flex-end; margin-top: 10px;">
+                                        <button type="submit" class="ld-btn ld-btn--primer">
+                                            Kirim
+                                        </button>
+                                    </div>
+                                </form>
+                            @else
+                                <div class="ld-gate">
+                                    <span class="ld-gate__text">
+                                        Laporan sedang <strong>{{ $item->label_status }}</strong>. Ulasan bisa diberikan setelah status <strong>Selesai</strong>.
+                                    </span>
+                                </div>
                             @endif
                         @endauth
+
+                        {{-- Komentar yang sudah ada (semua orang bisa lihat) --}}
+                        @if($item->ulasanList && $item->ulasanList->count() > 0)
+                            <div style="margin-top: 15px; text-align: center;">
+                                {{-- Tombol untuk memunculkan komentar --}}
+                                <button type="button" onclick="toggleUlasan('komentar-{{ $item->id }}', this)" class="ld-btn ld-btn--ghost" style="width: 100%; border: 1px dashed #cbd5e1;">
+                                    Lihat {{ $item->ulasanList->count() }} Ulasan ▼
+                                </button>
+                            </div>
+
+                            {{-- Bungkus komentar dengan div yang di-hidden (display: none) secara default --}}
+                            <div id="komentar-{{ $item->id }}" class="ld-comments" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid #e2e8f0;">
+                                @foreach($item->ulasanList as $ulasan)
+                                    <div class="ld-comment">
+                                        <div class="ld-comment__avatar">
+                                            {{ strtoupper(substr($ulasan->user?->nama_lengkap ?? 'U', 0, 1)) }}
+                                        </div>
+
+                                        <div class="ld-comment__body">
+                                            <div class="ld-comment__header">
+                                                <span class="ld-comment__who">
+                                                    {{-- NAMA PENGGUNA LANGSUNG DITAMPILKAN --}}
+                                                    {{ $ulasan->user?->nama_lengkap }}
+                                                </span>
+
+                                                <div class="ld-comment__stars">
+                                                    @for($i = 1; $i <= 5; $i++)
+                                                        <span class="{{ $ulasan->bintang >= $i ? 'on' : 'off' }}">★</span>
+                                                    @endfor
+                                                </div>
+                                            </div>
+
+                                            <p class="ld-comment__text">{{ $ulasan->komentar }}</p>
+
+                                            <span class="ld-comment__time">
+                                                {{ $ulasan->created_at->diffForHumans() }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+
                     </div>
-                </div>
 
-                {{-- Form ulasan (hidden by default) --}}
-                @auth
-                @if($item->status === 'selesai' && !$item->ulasan)
-                <div id="ulasan-{{ $item->id }}" style="display: none; margin-top: 1rem; padding: 1rem; background: #FFFBEB; border-radius: 12px; border: 1px solid #FCD34D;">
-                    <form method="POST" action="{{ route('eksplorasi.ulasan', $item->id) }}">
-                        @csrf
-                        <div style="margin-bottom: 0.75rem;">
-                            <label style="font-size: 0.8125rem; font-weight: 600; color: var(--warna-teks); display: block; margin-bottom: 0.5rem;">
-                                Beri Bintang untuk Penanganan di {{ $item->kota }}:
-                            </label>
-                            <div style="display: flex; gap: 0.375rem;" id="stars-{{ $item->id }}">
-                                @for($s = 1; $s <= 5; $s++)
-                                    <label style="cursor: pointer; font-size: 1.5rem; color: #D1D5DB;" class="star-label">
-                                        <input type="radio" name="bintang" value="{{ $s }}" required style="display: none;"
-                                            onchange="highlightStars('stars-{{ $item->id }}', {{ $s }})">
-                                        ★
-                                    </label>
-                                @endfor
-                            </div>
-                        </div>
-                        <textarea name="komentar" placeholder="Tulis komentar (opsional)..."
-                            style="width: 100%; padding: 0.625rem 0.875rem; border: 1.5px solid #FCD34D; border-radius: 10px; font-size: 0.875rem; resize: none; outline: none; box-sizing: border-box;"
-                            rows="2"></textarea>
-                        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.625rem; flex-wrap: wrap; gap: 0.5rem;">
-                            <label style="display: flex; align-items: center; gap: 0.375rem; font-size: 0.8125rem; color: var(--warna-teks-muted); cursor: pointer;">
-                                <input type="checkbox" name="is_anonim" value="1"> Kirim anonim
-                            </label>
-                            <div style="display: flex; gap: 0.5rem;">
-                                <button type="button" onclick="toggleUlasan('ulasan-{{ $item->id }}')"
-                                    style="padding: 0.375rem 0.875rem; background: white; border: 1px solid #E5E7EB; border-radius: 100px; font-size: 0.8rem; cursor: pointer;">
-                                    Batal
-                                </button>
-                                <button type="submit"
-                                    style="padding: 0.375rem 0.875rem; background: var(--warna-indigo); color: white; border: none; border-radius: 100px; font-size: 0.8rem; font-weight: 600; cursor: pointer;">
-                                    Kirim Ulasan
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                </article>
+                @empty
+                <div class="ld-empty">
+                    <p>Tidak ada laporan ditemukan.</p>
                 </div>
+                @endforelse
+
+                @if($laporan->hasPages())
+                    <div class="ld-pagination-wrapper">
+                        {{ $laporan->links() }}
+                    </div>
                 @endif
-                @endauth
 
-            </div>
-            @empty
-            <div style="text-align: center; padding: 4rem 2rem; background: white; border-radius: 16px;">
-                <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
-                <h3 style="font-weight: 700; color: var(--warna-indigo); margin-bottom: 0.5rem;">Tidak ada laporan ditemukan</h3>
-                <p style="color: var(--warna-teks-muted); font-size: 0.9rem;">Coba ubah filter atau kata kunci pencarianmu.</p>
-                <a href="{{ route('eksplorasi') }}" style="display: inline-block; margin-top: 1rem; padding: 0.625rem 1.25rem; background: var(--warna-indigo); color: white; border-radius: 100px; font-size: 0.875rem; font-weight: 600; text-decoration: none;">
-                    Lihat Semua Laporan
-                </a>
-            </div>
-            @endforelse
-
-            {{-- Pagination --}}
-            @if($laporan->hasPages())
-                <div style="margin-top: 1.5rem;">
-                    {{ $laporan->links() }}
-                </div>
-            @endif
+            </main>
         </div>
+
     </div>
 </div>
-
-@push('scripts')
-<script>
-function toggleUlasan(id) {
-    const el = document.getElementById(id);
-    el.style.display = el.style.display === 'none' ? 'block' : 'none';
-}
-
-function highlightStars(containerId, rating) {
-    const container = document.getElementById(containerId);
-    const labels = container.querySelectorAll('.star-label');
-    labels.forEach((label, idx) => {
-        label.style.color = idx < rating ? '#F59E0B' : '#D1D5DB';
-    });
-}
-</script>
-@endpush
 
 @endsection

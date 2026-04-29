@@ -146,21 +146,21 @@ class BerandaController extends Controller
     {
         return [
             [
-                'ikon'  => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#234A89" class="bi bi-search" viewBox="0 0 16 16">
+                'ikon'  => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#234A89" class="bi bi-search" viewBox="0 0 16 16">
                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                 </svg>',
                 'judul' => 'Validasi Foto Otomatis',
                 'desc'  => 'AI memastikan foto yang dikirim benar menunjukkan kerusakan jalan.',
             ],
             [
-                'ikon'  => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#234A89" class="bi bi-lightning-charge-fill" viewBox="0 0 16 16">
+                'ikon'  => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#234A89" class="bi bi-lightning-charge-fill" viewBox="0 0 16 16">
                 <path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09z"/>
                 </svg>',
                 'judul' => 'Sistem Prioritas Deadline Perbaikan',
                 'desc'  => 'Laporan dibagi menjadi tiga prioritas: tinggi, sedang, dan rendah.',
             ],
             [
-                'ikon'  => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#234A89" class="bi bi-bar-chart-fill" viewBox="0 0 16 16">
+                'ikon'  => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#234A89" class="bi bi-bar-chart-fill" viewBox="0 0 16 16">
                 <path d="M1 11a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm5-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1z"/>
                 </svg>',
                 'judul' => 'Skor Keparahan',
@@ -172,10 +172,26 @@ class BerandaController extends Controller
     private function contohBadge(): array
     {
         return [
-            ['ikon' => '🚀', 'nama' => 'Pengamat Jalan',        'syarat' => 'Level 1'],
-            ['ikon' => '🏙️', 'nama' => 'Pelapor Aktif',         'syarat' => 'Level 2'],
-            ['ikon' => '🦸', 'nama' => 'Penjaga Infrastruktur', 'syarat' => 'Level 3'],
-            ['ikon' => '🛡️', 'nama' => 'Pahlawan Negara',        'syarat' => 'Level 4'],
+            [
+                'ikon' => asset('images/Pengamat_Jalan.png'),
+                'nama' => 'Pengamat Jalan',
+                'syarat' => 'Level 1'
+            ],
+            [
+                'ikon' => asset('images/Pelapor_Aktif.png'),
+                'nama' => 'Pelapor Aktif',
+                'syarat' => 'Level 2'
+            ],
+            [
+                'ikon' => asset('images/Penjaga_Infrastruktur.png'),
+                'nama' => 'Penjaga Infrastruktur',
+                'syarat' => 'Level 3'
+            ],
+            [
+                'ikon' => asset('images/Pahlawan_Negara.png'),
+                'nama' => 'Pahlawan Negara',
+                'syarat' => 'Level 4'
+            ],
         ];
     }
 }

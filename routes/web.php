@@ -54,7 +54,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // ═══════════════════════════════════════════════
-// ADMIN & PETUGAS
+// ADMIN PEMERINTAH
 // ═══════════════════════════════════════════════
 Route::middleware(['auth', 'role:admin,petugas'])
     ->prefix('admin')
@@ -64,8 +64,18 @@ Route::middleware(['auth', 'role:admin,petugas'])
         Route::get('/laporan', [AdminController::class, 'daftarLaporan'])->name('laporan.daftar');
 
         Route::prefix('laporan/{laporan}')->name('laporan.')->group(function () {
-            Route::patch('/verifikasi', [AdminController::class, 'verifikasiLaporan'])->name('verifikasi');
-            Route::patch('/tugaskan', [AdminController::class, 'tugaskanPetugas'])->name('tugaskan');
-            Route::patch('/selesaikan', [AdminController::class, 'selesaikanLaporan'])->name('selesai');
+
+            Route::patch('/verifikasi', [AdminController::class, 'verifikasiLaporan'])
+                ->name('verifikasi');
+
+            Route::patch('/tugaskan', [AdminController::class, 'tugaskanPetugas'])
+                ->name('tugaskan');
+
+            Route::patch('/proses', [AdminController::class, 'prosesLaporan'])
+                ->name('proses');
+
+            Route::patch('/selesaikan', [AdminController::class, 'selesaikanLaporan'])
+                ->name('selesai');
+
         });
     });

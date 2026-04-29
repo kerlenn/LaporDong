@@ -1,174 +1,157 @@
 @extends('layouts.utama')
 
-@section('judul', 'Dashboard Admin')
+@section('judul', 'LaporDong - Dashboard Pemerintah')
 
 @section('konten')
-<section class="py-8 px-4 min-h-screen" style="background: var(--warna-latar);">
-    <div class="max-w-7xl mx-auto">
+<div class="dashboard-wrapper">
+    <div class="ld-container">
 
-        {{-- Page Header --}}
-        <div class="mb-8" data-animate="fadeUp">
-            <h1 class="text-3xl font-bold" style="color: var(--warna-indigo); font-family: var(--font-display);">
-                Dashboard Admin
-            </h1>
-            <p style="color: var(--warna-teks-muted);">
-                Selamat datang, <strong>{{ auth()->user()->nama }}</strong> —
-                {{ now()->isoFormat('dddd, D MMMM Y') }}
-            </p>
+        {{-- HEADER --}}
+        <div class="header-container" data-animate="fadeUp">
+            <div>
+                <div class="header-subtitle">Dashboard Pemerintah</div>
+                <h1 class="header-title">
+                    Halo, {{ auth()->user()->nama_lengkap }}
+                </h1>
+            </div>
+
+            <a href="{{ route('admin.laporan.daftar') }}" class="ld-btn ld-btn--primer ld-btn--lg">
+                Kelola Laporan
+            </a>
         </div>
 
-        {{-- Kartu Statistik --}}
-        <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8" data-animate-grid>
+        {{-- STATS --}}
+        <div class="stats-grid" data-animate-grid>
             @php
                 $kartuStats = [
-                    ['angka' => $stats['total'],         'label' => 'Total Laporan',  'icon' => '📋', 'warna' => 'var(--warna-indigo)'],
-                    ['angka' => $stats['menunggu'],      'label' => 'Menunggu Verifikasi','icon' => '⏳', 'warna' => '#F59E0B'],
-                    ['angka' => $stats['diproses'],      'label' => 'Sedang Diproses','icon' => '🔧', 'warna' => '#3B82F6'],
-                    ['angka' => $stats['selesai_bulan'], 'label' => 'Selesai Bulan Ini','icon' => '✅', 'warna' => '#10B981'],
-                    ['angka' => $stats['petugas_aktif'], 'label' => 'Petugas Aktif',  'icon' => '👷', 'warna' => 'var(--warna-cobalt)'],
+                    [
+                        'angka' => $stats['total'], 
+                        'label' => 'Total Laporan', 
+                        'ikon' => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-file-earmark-fill" viewBox="0 0 16 16"><path d="M4 0h5.293A1 1 0 0 1 10 .293L13.707 4a1 1 0 0 1 .293.707V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2m5.5 1.5v2a1 1 0 0 0 1 1h2z"/></svg>', 
+                        'warna' => '#234A89'
+                    ],
+                    [
+                        'angka' => $stats['menunggu'], 
+                        'label' => 'Menunggu Verifikasi', 
+                        'ikon' => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-hourglass-split" viewBox="0 0 16 16"><path d="M2.5 15a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1zm2-13v1c0 .537.12 1.045.337 1.5h6.326c.216-.455.337-.963.337-1.5V2zm3 6.35c0 .701-.478 1.236-1.011 1.492A3.5 3.5 0 0 0 4.5 13s.866-1.299 3-1.48zm1 0v3.17c2.134.181 3 1.48 3 1.48a3.5 3.5 0 0 0-1.989-3.158C8.978 9.586 8.5 9.052 8.5 8.351z"/></svg>', 
+                        'warna' => '#234A89'
+                    ],
+                    [
+                        'angka' => $stats['diproses'], 
+                        'label' => 'Sedang Diproses', 
+                        'ikon' => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-wrench" viewBox="0 0 16 16"><path d="M.102 2.223A3.004 3.004 0 0 0 3.78 5.897l6.341 6.252A3.003 3.003 0 0 0 13 16a3 3 0 1 0-.851-5.878L5.897 3.781A3.004 3.004 0 0 0 2.223.1l2.141 2.142L4 4l-1.757.364zm13.37 9.019.528.026.287.445.445.287.026.529L15 13l-.242.471-.026.529-.445.287-.287.445-.529.026L13 15l-.471-.242-.529-.026-.287-.445-.445-.287-.026-.529L11 13l.242-.471.026-.529.445-.287.287-.445.529-.026L13 11z"/></svg>', 
+                        'warna' => '#234A89'
+                    ],
+                    [
+                        'angka' => $stats['selesai_bulan'], 
+                        'label' => 'Laporan Selesai', 
+                        'ikon' => '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-check-square-fill" viewBox="0 0 16 16"><path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm10.03 4.97a.75.75 0 0 1 .011 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.75.75 0 0 1 1.08-.022z"/></svg>', 
+                        'warna' => '#234A89'
+                    ],
                 ];
             @endphp
-            @foreach($kartuStats as $kartu)
-                <div class="ld-card p-5"
-                    style="border-top: 3px solid {{ $kartu['warna'] }};">
-                    <div class="text-3xl mb-3">{{ $kartu['icon'] }}</div>
-                    <div class="text-3xl font-bold mb-1"
-                        style="color: {{ $kartu['warna'] }}; font-family: var(--font-display);"
-                        data-count="{{ $kartu['angka'] }}">{{ $kartu['angka'] }}</div>
-                    <div class="text-sm" style="color: var(--warna-teks-muted);">{{ $kartu['label'] }}</div>
+
+            @foreach($kartuStats as $stat)
+            <div class="ld-card">
+                <div class="ld-card__body stat-card-body">
+                    {{-- Style warna dibiarkan inline karena bersifat dinamis dari variabel PHP --}}
+                    <div class="stat-icon" style="color: {{ $stat['warna'] }};">
+                        {!! $stat['ikon'] !!}
+                    </div>
+                    <div>
+                        <div class="stat-number" style="color: {{ $stat['warna'] }};">
+                            {{ number_format($stat['angka']) }}
+                        </div>
+                        <div class="stat-label">
+                            {{ $stat['label'] }}
+                        </div>
+                    </div>
                 </div>
+            </div>
             @endforeach
         </div>
 
-        <div class="grid lg:grid-cols-3 gap-6 mb-8">
+        <div class="main-grid">
 
-            {{-- Laporan Menunggu Tindakan --}}
-            <div class="lg:col-span-2 ld-card" data-animate="fadeLeft">
-                <div class="p-5 border-b flex items-center justify-between"
-                    style="border-color: var(--warna-icy);">
-                    <h2 class="text-lg font-bold" style="color: var(--warna-indigo);">
-                        ⚡ Laporan Perlu Tindakan
-                    </h2>
-                    <a href="{{ route('admin.laporan.daftar', ['status' => 'dikirim']) }}"
-                        class="ld-btn-ghost ld-btn-sm">Lihat Semua</a>
+            {{-- LIST LAPORAN --}}
+            <div class="ld-card" data-animate="fadeUp" data-delay="0.2">
+                <div class="ld-card__header">
+                    <h2 class="list-header-title">Laporan Perlu Tindakan</h2>
+                    <a href="{{ route('admin.laporan.daftar', ['status'=>'dikirim']) }}" class="list-header-link">
+                        Lihat semua
+                    </a>
                 </div>
-                <div class="divide-y" style="--tw-divide-opacity: 1;">
+
+                <div class="list-body-container">
                     @forelse($laporanTerbaru as $laporan)
-                        <div class="p-4 hover:bg-blue-50 transition-colors">
-                            <div class="flex items-start gap-3">
-                                @if($laporan->foto_sebelum)
-                                    <img src="{{ Storage::url(is_array($laporan->foto_sebelum) ? $laporan->foto_sebelum[0] : $laporan->foto_sebelum) }}"
-                                        alt="Foto" class="w-12 h-12 rounded-lg object-cover flex-shrink-0">
-                                @else
-                                    <div class="w-12 h-12 rounded-lg flex items-center justify-center text-xl flex-shrink-0"
-                                        style="background: var(--warna-icy);">🛣️</div>
-                                @endif
-                                <div class="flex-1 min-w-0">
-                                    <div class="flex items-center gap-2 mb-0.5">
-                                        <span class="text-xs font-mono" style="color: var(--warna-cobalt);">
-                                            {{ $laporan->kode_laporan }}
-                                        </span>
-                                        <span class="ld-badge ld-badge-{{ $laporan->status }}">
-                                            {{ $laporan->label_status }}
-                                        </span>
-                                        @if($laporan->prioritas_ai)
-                                            <span class="text-xs font-semibold px-2 py-0.5 rounded"
-                                                style="background: {{ $laporan->warna_prioritas }}20; color: {{ $laporan->warna_prioritas }};">
-                                                {{ $laporan->label_prioritas }}
-                                            </span>
-                                        @endif
-                                    </div>
-                                    <p class="font-medium text-sm truncate" style="color: var(--warna-teks);">
-                                        {{ $laporan->judul }}
-                                    </p>
-                                    <p class="text-xs" style="color: var(--warna-teks-muted);">
-                                        {{ $laporan->kota }} · {{ $laporan->pelapor->nama }} · {{ $laporan->created_at->diffForHumans() }}
-                                    </p>
-                                </div>
-                                <a href="{{ route('laporan.detail', $laporan) }}"
-                                    class="ld-btn-outline ld-btn-sm flex-shrink-0">Tinjau</a>
+                    <a href="{{ route('laporan.detail', $laporan) }}" class="laporan-item">
+
+                        <div class="laporan-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#234A89" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">  <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/></svg>
+                        </div>
+
+                        <div class="laporan-text-container">
+                            <div class="laporan-title">
+                                {{ $laporan->judul }}
+                            </div>
+                            <div class="laporan-subtitle">
+                                {{ $laporan->kota }} · {{ $laporan->created_at->diffForHumans() }}
                             </div>
                         </div>
-                    @empty
-                        <div class="p-10 text-center">
-                            <div class="text-4xl mb-2">🎉</div>
-                            <p style="color: var(--warna-teks-muted);">Semua laporan sudah ditangani!</p>
+
+                        <div class="laporan-badge-container">
+                            <span class="ld-badge ld-badge--{{ $laporan->status }}">
+                                {{ $laporan->label_status }}
+                            </span>
                         </div>
+                    </a>
+                    @empty
+                    <div class="empty-state">
+                        <p class="empty-title">Semua aman!</p>
+                        <p class="empty-subtitle">Belum ada laporan yang perlu ditindaklanjuti.</p>
+                    </div>
                     @endforelse
                 </div>
             </div>
 
-            {{-- Panel Kanan --}}
-            <div class="space-y-6">
+            {{-- PANEL KANAN --}}
+            <div class="right-panel">
 
-                {{-- Petugas Aktif --}}
-                <div class="ld-card p-5" data-animate="fadeRight">
-                    <h3 class="font-bold mb-4" style="color: var(--warna-indigo);">
-                        👷 Petugas Aktif
-                    </h3>
-                    @forelse($petugasAktif as $petugas)
-                        <div class="flex items-center gap-3 py-2.5 border-b"
-                            style="border-color: var(--warna-icy);">
-                            <div class="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm text-white"
-                                style="background: var(--warna-cobalt);">
-                                {{ strtoupper(substr($petugas->nama, 0, 1)) }}
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <p class="font-medium text-sm truncate" style="color: var(--warna-teks);">
-                                    {{ $petugas->nama }}
-                                </p>
-                                <p class="text-xs" style="color: var(--warna-teks-muted);">
-                                    {{ $petugas->tugasSaya()->where('status', 'diproses')->count() }} tugas aktif
-                                </p>
-                            </div>
-                        </div>
-                    @empty
-                        <p class="text-sm text-center py-3" style="color: var(--warna-teks-muted);">
-                            Tidak ada petugas
-                        </p>
-                    @endforelse
+                {{-- AKSI CEPAT --}}
+                <div class="ld-card" data-animate="fadeRight" data-delay="0.15">
+                    <div class="ld-card__header">
+                        <h2 class="quick-action-title">Aksi Cepat</h2>
+                    </div>
+
+                    <div class="ld-card__body quick-action-body">
+                        <a href="{{ route('admin.laporan.daftar',['status'=>'dikirim']) }}" class="ld-btn ld-btn--ghost quick-action-btn">
+                            Verifikasi Laporan
+                        </a>
+
+                        <a href="{{ route('admin.laporan.daftar',['status'=>'diproses']) }}" class="ld-btn ld-btn--ghost quick-action-btn">
+                            Proses & Selesaikan Laporan
+                        </a>
+
+                        <a href="{{ route('admin.laporan.daftar',['status'=>'selesai']) }}" class="ld-btn ld-btn--ghost quick-action-btn">
+                            Lihat Laporan Selesai
+                        </a>
+                    </div>
                 </div>
 
-                {{-- Aksi Cepat --}}
-                <div class="ld-card p-5" data-animate="fadeRight">
-                    <h3 class="font-bold mb-4" style="color: var(--warna-indigo);">
-                        ⚡ Aksi Cepat
-                    </h3>
-                    <div class="space-y-2">
-                        <a href="{{ route('admin.laporan.daftar', ['status' => 'dikirim']) }}"
-                            class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-50 transition-colors"
-                            style="border: 1px solid var(--warna-icy);">
-                            <span class="text-xl">📨</span>
-                            <span class="text-sm font-medium" style="color: var(--warna-teks);">
-                                Verifikasi Laporan Baru
-                            </span>
-                            @if($stats['menunggu'] > 0)
-                                <span class="ml-auto text-xs font-bold px-2 py-0.5 rounded-full text-white"
-                                    style="background: #EF4444;">{{ $stats['menunggu'] }}</span>
-                            @endif
-                        </a>
-                        <a href="{{ route('admin.laporan.daftar', ['status' => 'diverifikasi']) }}"
-                            class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-50 transition-colors"
-                            style="border: 1px solid var(--warna-icy);">
-                            <span class="text-xl">👷</span>
-                            <span class="text-sm font-medium" style="color: var(--warna-teks);">
-                                Tugaskan Petugas
-                            </span>
-                        </a>
-                        <a href="{{ route('statistik') }}"
-                            class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-50 transition-colors"
-                            style="border: 1px solid var(--warna-icy);">
-                            <span class="text-xl">📊</span>
-                            <span class="text-sm font-medium" style="color: var(--warna-teks);">
-                                Lihat Statistik Publik
-                            </span>
-                        </a>
+                {{-- INFO --}}
+                <div class="ld-card" data-animate="fadeRight" data-delay="0.25">
+                    <div class="ld-card__body info-card-body">
+                        <div class="info-icon-wrapper">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#234A89" class="bi bi-patch-check-fill" viewBox="0 0 16 16">  <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708"/></svg>
+                        </div>
+                        <p class="info-text">
+                            Pantau dan kelola laporan masyarakat secara efisien.
+                        </p>
                     </div>
                 </div>
 
             </div>
         </div>
-
     </div>
-</section>
+</div>
 @endsection

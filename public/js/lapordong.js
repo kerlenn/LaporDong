@@ -1,7 +1,7 @@
 /**
  * lapordong.js — JavaScript Utama LaporDong
- * Mengelola: header scroll, navigasi, GSAP animasi, dropdown, upload foto, rating
- * Prinsip: Modular, ringan, tanpa efek zoom
+ * Mengelola: header scroll, navigasi, GSAP animasi, dropdown, upload foto, rating, peta
+ * Prinsip: Modular, ringan, tanpa efek zoom, aman dari null error
  */
 
 // ════════════════════════════════════════════════
@@ -34,62 +34,63 @@ function inisialisasiHeader() {
 }
 
 // ════════════════════════════════════════════════
-// DROPDOWN PROFIL
+// NAVIGASI (Dropdown Profil + Hamburger Mobile)
 // ════════════════════════════════════════════════
-function inisialisasiDropdownProfil() {
-    const tombolProfil = document.getElementById('menuProfilToggle');
-    const menuProfil = document.getElementById('menuProfil');
+function inisialisasiNavigasi() {
+    const toggle = document.getElementById('menuProfilToggle');
+    const dropdown = document.getElementById('menuProfil');
 
-    if (!tombolProfil) return;
+    if (toggle && dropdown) {
+        toggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggle.classList.toggle('terbuka');
+            dropdown.classList.toggle('active');
+        });
 
-    tombolProfil.addEventListener('click', (e) => {
-        e.stopPropagation();
-        tombolProfil.classList.toggle('terbuka');
-    });
+        document.addEventListener('click', (e) => {
+            if (!toggle.contains(e.target) && !dropdown.contains(e.target)) {
+                toggle.classList.remove('terbuka');
+                dropdown.classList.remove('active');
+            }
+        });
+    }
 
-    document.addEventListener('click', (e) => {
-        if (!tombolProfil.contains(e.target)) {
-            tombolProfil.classList.remove('terbuka');
-        }
-    });
-}
-
-// ════════════════════════════════════════════════
-// HAMBURGER MOBILE
-// ════════════════════════════════════════════════
-function inisialisasiHamburger() {
     const hamburger = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobileMenu');
 
-    if (!hamburger || !mobileMenu) return;
-
-    hamburger.addEventListener('click', () => {
-        mobileMenu.classList.toggle('terbuka');
-        const terbuka = mobileMenu.classList.contains('terbuka');
-        hamburger.setAttribute('aria-expanded', terbuka);
-    });
+    if (hamburger && mobileMenu) {
+        hamburger.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+            hamburger.setAttribute('aria-expanded', mobileMenu.classList.contains('active'));
+        });
+    }
 }
 
 // ════════════════════════════════════════════════
-// AUTO-DISMISS FLASH MESSAGE
+// FLASH MESSAGE (auto-dismiss + tombol tutup)
 // ════════════════════════════════════════════════
 function inisialisasiFlash() {
     const flash = document.getElementById('flashMessage');
-    if (!flash) return;
 
-    setTimeout(() => {
-        if (typeof gsap !== 'undefined') {
-            gsap.to(flash, {
-                opacity: 0,
-                x: 24,
-                duration: 0.4,
-                ease: 'power2.in',
-                onComplete: () => flash.remove()
-            });
-        } else {
-            flash.remove();
-        }
-    }, 5000);
+    if (flash) {
+        setTimeout(() => {
+            if (typeof gsap !== 'undefined') {
+                gsap.to(flash, {
+                    opacity: 0,
+                    x: 24,
+                    duration: 0.4,
+                    ease: 'power2.in',
+                    onComplete: () => flash.remove()
+                });
+            } else {
+                flash.remove();
+            }
+        }, 5000);
+    }
+
+    document.querySelectorAll('[data-flash]').forEach(el => {
+        el.querySelector('.ld-flash__close')?.addEventListener('click', () => el.remove());
+    });
 }
 
 // ════════════════════════════════════════════════
@@ -106,10 +107,10 @@ function inisialisasiAnimasiScroll() {
 
         let fromVars = { opacity: 0, duration: 0.7, delay };
 
-        if (tipe === 'fadeUp')   fromVars.y = 30;
-        if (tipe === 'fadeLeft') fromVars.x = -30;
+        if (tipe === 'fadeUp')    fromVars.y = 30;
+        if (tipe === 'fadeLeft')  fromVars.x = -30;
         if (tipe === 'fadeRight') fromVars.x = 30;
-        if (tipe === 'fadeIn')   { /* hanya opacity */ }
+        if (tipe === 'fadeIn')    { /* hanya opacity */ }
 
         gsap.from(el, {
             ...fromVars,
@@ -158,10 +159,10 @@ function animasiHero() {
 
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-    if (labelHero) tl.from(labelHero, { opacity: 0, y: 20, duration: 0.6 }, 0.2);
-    if (judulHero) tl.from(judulHero, { opacity: 0, y: 28, duration: 0.7 }, 0.35);
-    if (descHero)  tl.from(descHero, { opacity: 0, y: 20, duration: 0.6 }, 0.5);
-    if (aksiHero)  tl.from(aksiHero, { opacity: 0, y: 16, duration: 0.5 }, 0.65);
+    if (labelHero)  tl.from(labelHero,  { opacity: 0, y: 20, duration: 0.6 }, 0.2);
+    if (judulHero)  tl.from(judulHero,  { opacity: 0, y: 28, duration: 0.7 }, 0.35);
+    if (descHero)   tl.from(descHero,   { opacity: 0, y: 20, duration: 0.6 }, 0.5);
+    if (aksiHero)   tl.from(aksiHero,   { opacity: 0, y: 16, duration: 0.5 }, 0.65);
     if (gambarHero) tl.from(gambarHero, { opacity: 0, x: 40, duration: 0.8 }, 0.4);
 }
 
@@ -262,9 +263,9 @@ function tampilkanPreviewFoto(files, container, teks) {
 }
 
 // ════════════════════════════════════════════════
-// RATING INTERAKTIF
+// RATING INTERAKTIF (input form)
 // ════════════════════════════════════════════════
-function inisialisasiRating() {
+function inisialisasiRatingInput() {
     const grupRating = document.querySelectorAll('.ld-rating-input');
 
     grupRating.forEach((grup) => {
@@ -300,6 +301,57 @@ function perbaruiTampilanRating(bintang, nilai) {
 }
 
 // ════════════════════════════════════════════════
+// RATING LAPORAN (kirim ke backend via fetch)
+// ════════════════════════════════════════════════
+function inisialisasiRating() {
+    document.querySelectorAll('.ld-rating').forEach(el => {
+        const stars = el.querySelectorAll('.ld-star');
+        const id = el.dataset.id;
+
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const val = star.dataset.value;
+
+                // UI update dulu (instant feedback)
+                stars.forEach(s => {
+                    s.classList.toggle('is-active', s.dataset.value <= val);
+                });
+
+                const valueEl = el.querySelector('.ld-rating__value');
+                if (valueEl) valueEl.innerText = val + '/5';
+
+                // Kirim ke backend
+                fetch(`/laporan/${id}/rating`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({ bintang: val })
+                });
+            });
+        });
+    });
+
+    // Rating bintang untuk input form (stars input)
+    document.querySelectorAll('.ld-stars-input').forEach(container => {
+        const stars = container.querySelectorAll('.ld-star-input');
+        const input = container.querySelector('input');
+
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const val = star.dataset.value;
+                if (input) input.value = val;
+
+                stars.forEach(s => {
+                    s.classList.toggle('active', s.dataset.value <= val);
+                });
+            });
+        });
+    });
+}
+
+// ════════════════════════════════════════════════
 // GPS LOKASI OTOMATIS
 // ════════════════════════════════════════════════
 function inisialisasiGPS() {
@@ -317,7 +369,7 @@ function inisialisasiGPS() {
         }
 
         tombolGPS.disabled = true;
-        tombolGPS.textContent = '📡 Mencari lokasi...';
+        tombolGPS.textContent = 'Mencari lokasi...';
 
         navigator.geolocation.getCurrentPosition(
             (posisi) => {
@@ -327,10 +379,9 @@ function inisialisasiGPS() {
                 if (inputLat) inputLat.value = lat;
                 if (inputLng) inputLng.value = lng;
 
-                if (statusGPS) statusGPS.textContent = `✅ Lokasi ditemukan: ${lat}, ${lng}`;
+                if (statusGPS) statusGPS.textContent = `Lokasi ditemukan: ${lat}, ${lng}`;
 
-                tombolGPS.textContent = '📍 Lokasi Terdeteksi';
-                tombolGPS.style.background = '#16A34A';
+                tombolGPS.textContent = 'Lokasi Terdeteksi';
             },
             (error) => {
                 const pesanError = {
@@ -341,7 +392,7 @@ function inisialisasiGPS() {
 
                 if (statusGPS) statusGPS.textContent = `❌ ${pesanError}`;
                 tombolGPS.disabled = false;
-                tombolGPS.textContent = '📍 Ambil Lokasi GPS';
+                tombolGPS.textContent = 'Ambil Lokasi GPS';
             },
             { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
         );
@@ -405,55 +456,259 @@ function inisialisasiKonfirmasi() {
 }
 
 // ════════════════════════════════════════════════
+// PETA LEAFLET + NOMINATIM + GPS + PENCARIAN
+// ════════════════════════════════════════════════
+function inisialisasiPeta() {
+    const mapEl = document.getElementById('mapLocation');
+    if (!mapEl || typeof L === 'undefined') return;
+
+    // 1. Inisialisasi Peta (Default koordinat diarahkan ke Jakarta/Indonesia)
+    var map = L.map('mapLocation').setView([-6.2088, 106.8456], 13);
+
+    // Gunakan peta standar OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    // 2. Tambahkan Pin (Marker) yang bisa di-drag
+    var marker = L.marker([-6.2088, 106.8456], { draggable: true }).addTo(map);
+
+    // Definisi Elemen Form
+    var latInput      = document.getElementById('latitude');
+    var lngInput      = document.getElementById('longitude');
+    var alamatInput   = document.getElementById('alamat_lengkap');
+    var kelurahanInput = document.getElementById('kelurahan');
+    var kecamatanInput = document.getElementById('kecamatan');
+    var kotaInput     = document.getElementById('kota');
+    var provinsiInput = document.getElementById('provinsi');
+    var kodePosInput  = document.getElementById('kode_pos');
+    var statusGps     = document.getElementById('statusGPS');
+
+    // 3. Fungsi untuk Update Form otomatis via API Nominatim
+    function updateFormFields(lat, lng) {
+        if (latInput) latInput.value = lat.toFixed(6);
+        if (lngInput) lngInput.value = lng.toFixed(6);
+
+        if (statusGps) {
+            statusGps.innerText = 'Mengambil data alamat...';
+            statusGps.className = 'ld-gps-status ld-status-sukses';
+            statusGps.style.color = '';
+        }
+
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.address) {
+                    var addr = data.address;
+                    if (alamatInput)    alamatInput.value    = data.display_name || '';
+                    if (kelurahanInput) kelurahanInput.value = addr.village || addr.suburb || addr.neighbourhood || addr.residential || '';
+                    if (kecamatanInput) kecamatanInput.value = addr.city_district || addr.county || addr.district || '';
+                    if (kotaInput)      kotaInput.value      = addr.city || addr.town || addr.municipality || addr.regency || '';
+                    if (provinsiInput)  provinsiInput.value  = addr.state || addr.province || '';
+                    if (kodePosInput)   kodePosInput.value   = addr.postcode || '';
+
+                    if (statusGps) {
+                        statusGps.innerText = 'Lokasi dan alamat berhasil diperbarui.';
+                        statusGps.className = 'ld-gps-status ld-status-sukses';
+                        statusGps.style.color = '';
+                    }
+                }
+            })
+            .catch(err => {
+                if (statusGps) {
+                    statusGps.innerText = 'Gagal mengambil nama jalan otomatis. Silakan isi manual.';
+                    statusGps.className = 'ld-gps-status';
+                    statusGps.style.color = 'red';
+                }
+                console.error(err);
+            });
+    }
+
+    // 4. Jika Pin Digeser
+    marker.on('dragend', function () {
+        var position = marker.getLatLng();
+        updateFormFields(position.lat, position.lng);
+        map.panTo(position);
+    });
+
+    // 5. Jika Peta di-Klik
+    map.on('click', function (e) {
+        marker.setLatLng(e.latlng);
+        updateFormFields(e.latlng.lat, e.latlng.lng);
+    });
+
+    // 6. Fitur Pencarian Alamat Manual di Peta
+    const btnSearch = document.getElementById('btnSearchMap');
+    const searchInput = document.getElementById('mapSearchInput');
+
+    if (btnSearch && searchInput) {
+        btnSearch.addEventListener('click', function () {
+            var query = searchInput.value;
+            if (!query) return;
+
+            if (statusGps) {
+                statusGps.innerText = 'Mencari lokasi...';
+                statusGps.className = 'ld-gps-status ld-status-sukses';
+                statusGps.style.color = '';
+            }
+
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.length > 0) {
+                        var lat = parseFloat(data[0].lat);
+                        var lon = parseFloat(data[0].lon);
+                        var newLatLng = new L.LatLng(lat, lon);
+
+                        map.setView(newLatLng, 16);
+                        marker.setLatLng(newLatLng);
+                        updateFormFields(lat, lon);
+                    } else {
+                        if (statusGps) {
+                            statusGps.innerText = 'Lokasi tidak ditemukan. Coba kata kunci lain.';
+                            statusGps.className = 'ld-gps-status';
+                            statusGps.style.color = 'red';
+                        }
+                    }
+                })
+                .catch(() => {
+                    if (statusGps) {
+                        statusGps.innerText = 'Terjadi kesalahan saat mencari lokasi.';
+                        statusGps.className = 'ld-gps-status';
+                        statusGps.style.color = 'red';
+                    }
+                });
+        });
+
+        // Tekan Enter pada kolom pencarian
+        searchInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                btnSearch.click();
+            }
+        });
+    }
+
+    // 7. Tombol "Ambil Lokasi GPS" (Device GPS) — override inisialisasiGPS untuk peta
+    const tombolGps = document.getElementById('tombolAmbilLokasi');
+    if (tombolGps) {
+        // Hapus listener lama agar tidak double-fire, lalu pasang ulang dengan logika peta
+        const tombolBaru = tombolGps.cloneNode(true);
+        tombolGps.parentNode.replaceChild(tombolBaru, tombolGps);
+
+        tombolBaru.addEventListener('click', function () {
+            if (!('geolocation' in navigator)) {
+                if (statusGps) {
+                    statusGps.innerText = 'Browser Anda tidak mendukung fitur GPS.';
+                    statusGps.className = 'ld-gps-status';
+                    statusGps.style.color = 'red';
+                }
+                return;
+            }
+
+            if (statusGps) {
+                statusGps.innerText = 'Mencari sinyal GPS pada perangkat...';
+                statusGps.className = 'ld-gps-status ld-status-sukses';
+                statusGps.style.color = '';
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    var lat = position.coords.latitude;
+                    var lon = position.coords.longitude;
+                    var newLatLng = new L.LatLng(lat, lon);
+
+                    map.setView(newLatLng, 17);
+                    marker.setLatLng(newLatLng);
+                    updateFormFields(lat, lon);
+                },
+                function () {
+                    if (statusGps) {
+                        statusGps.innerText = 'Gagal mengambil GPS. Pastikan izin lokasi aktif.';
+                        statusGps.className = 'ld-gps-status';
+                        statusGps.style.color = 'red';
+                    }
+                }
+            );
+        });
+    }
+
+    // Fix rendering Leaflet agar sesuai dengan ukuran kotak pembungkus
+    setTimeout(() => map.invalidateSize(), 500);
+}
+
+// ════════════════════════════════════════════════
+// LIGHTBOX GAMBAR
+// ════════════════════════════════════════════════
+function bukaGambarBesar(src) {
+    const img = document.getElementById('lightboxGambarImg');
+    const box = document.getElementById('lightboxGambar');
+    if (img) img.src = src;
+    if (box) box.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function tutupGambarBesar() {
+    const box = document.getElementById('lightboxGambar');
+    if (box) box.style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') tutupGambarBesar();
+});
+
+// ════════════════════════════════════════════════
+// EKSPLORASI — Toggle Ulasan & Highlight Bintang
+// ════════════════════════════════════════════════
+function toggleUlasan(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+function highlightStars(containerId, rating) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const labels = container.querySelectorAll('.star-label');
+
+    labels.forEach((label, idx) => {
+        label.style.color = idx < rating ? '#F59E0B' : '#D1D5DB';
+    });
+}
+
+// ════════════════════════════════════════════════
+// DASHBOARD ADMIN — Modal Selesaikan Laporan
+// ════════════════════════════════════════════════
+function bukaModal(id, judul) {
+    const modal = document.getElementById('modalSelesai');
+    const form  = document.getElementById('formSelesai');
+    if (modal) modal.style.display = 'flex';
+    if (form)  form.action = `/admin/laporan/${id}/selesaikan`;
+}
+
+function tutupModal() {
+    const modal = document.getElementById('modalSelesai');
+    if (modal) modal.style.display = 'none';
+}
+
+// ════════════════════════════════════════════════
 // INIT — Jalankan Semua
 // ════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
     inisialisasiHeader();
-    inisialisasiDropdownProfil();
-    inisialisasiHamburger();
+    inisialisasiNavigasi();
     inisialisasiFlash();
     inisialisasiAnimasiScroll();
     animasiHero();
     animasiAngkaStatistik();
     inisialisasiUploadFoto();
+    inisialisasiRatingInput();
     inisialisasiRating();
     inisialisasiGPS();
     inisialisasiTracking();
     inisialisasiScrollHorizontal();
     inisialisasiKonfirmasi();
+    inisialisasiPeta();
 });
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    // Dropdown profile
-    const toggle = document.getElementById("menuProfilToggle");
-    const dropdown = document.getElementById("menuProfil");
-
-    if (toggle && dropdown) {
-        toggle.addEventListener("click", () => {
-            dropdown.classList.toggle("active");
-        });
-    }
-
-    // Hamburger menu
-    const hamburger = document.getElementById("hamburger");
-    const mobileMenu = document.getElementById("mobileMenu");
-
-    if (hamburger && mobileMenu) {
-        hamburger.addEventListener("click", () => {
-            mobileMenu.classList.toggle("active");
-        });
-    }
-
-    // Flash close
-    document.querySelectorAll("[data-flash]").forEach(flash => {
-        const btn = flash.querySelector(".ld-flash__close");
-        if (btn) {
-            btn.addEventListener("click", () => {
-                flash.remove();
-            });
-        }
-    });
-
-});
-

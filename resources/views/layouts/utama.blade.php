@@ -14,6 +14,7 @@
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('css/lapordong.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 
     @stack('styles')
 </head>
@@ -43,23 +44,34 @@
                     <a href="{{ route('masuk') }}" class="ld-btn ld-btn--ghost">Masuk</a>
                     <a href="{{ route('daftar') }}" class="ld-btn ld-btn--primer">Daftar</a>
                 @else
-                    <div class="ld-nav__profil" id="menuProfilToggle">
-                        <img src="{{ Auth::user()->avatar_url }}" alt="Profil" class="ld-nav__avatar">
-                        <span class="ld-nav__nama">{{ Str::words(Auth::user()->nama_lengkap, 1, '') }}</span>
+                    <div class="ld-profil-gradient-wrapper">
+                        <div class="ld-nav__profil ld-profil-inner" id="menuProfilToggle">
+                            <img src="{{ Auth::user()->avatar_url }}" alt="Profil" class="ld-nav__avatar">
+                            <span class="ld-nav__nama">{{ Str::words(Auth::user()->nama_lengkap, 1, '') }}</span>
 
-                        <div class="ld-nav__dropdown" id="menuProfil">
+                            <div class="ld-nav__dropdown" id="menuProfil">
                             <div class="ld-nav__dropdown-header">
                                 <p>{{ Auth::user()->nama_lengkap }}</p>
+                            @if(Auth::user()->peran === 'admin')
+                                <small>Admin</small>
+                            @else
                                 <small>{{ Auth::user()->level }}</small>
+                            @endif
                             </div>
 
-                            <a href="{{ route('dasbor.warga') }}" class="ld-nav__dropdown-item">Dasbor</a>
+                            @if(Auth::user()->peran === 'admin')
+                                <a href="{{ route('admin.dasbor') }}" class="ld-nav__dropdown-item">Dasbor Pemerintah</a>
+                            @else
+                                <a href="{{ route('dasbor.warga') }}" class="ld-nav__dropdown-item">Dasbor</a>
+                            @endif
+
                             <a href="{{ route('dasbor.profil') }}" class="ld-nav__dropdown-item">Profil</a>
 
                             <form method="POST" action="{{ route('keluar') }}">
                                 @csrf
-                                <button type="submit" class="ld-nav__dropdown-item danger">Keluar</button>
+                                <button type="submit" class="ld-nav__dropdown-item-keluar danger">Keluar</button>
                             </form>
+                        </div>
                         </div>
                     </div>
                 @endguest
@@ -128,7 +140,6 @@
                 </ul>
             </div>
 
-            <!-- Account -->
             <div>
                 <h4 class="ld-footer__heading">Akun</h4>
                 <ul class="ld-footer__links">
@@ -144,9 +155,8 @@
 
         </div>
 
-        <!-- Bottom -->
         <div class="ld-footer__bottom">
-            <p>© {{ date('Y') }} LaporDong. Dibuat untuk Negeri Indonesia</p>
+            <p>© {{ date('Y') }} LaporDong. Dibuat untuk Negera Indonesia</p>
             <p class="ld-footer__tech">Dibuat oleh UCCD_KicauMania</p>
         </div>
 
@@ -155,6 +165,7 @@
 
 <!-- Scripts -->
 <script src="{{ asset('js/lapordong.js') }}"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 @stack('scripts')
 
 </body>

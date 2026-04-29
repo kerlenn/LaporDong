@@ -1,37 +1,34 @@
 @extends('layouts.utama')
-@section('judul', 'Buat Laporan Baru — LaporDong')
+@section('judul', 'LaporDong - Buat Laporan Baru')
 
 @section('konten')
-<div style="padding-top: 6rem; padding-bottom: 4rem; background: var(--ld-bg-soft); min-height: 100vh;">
-    <div class="ld-container" style="max-width: 760px;">
+<div class="ld-page-wrapper">
+    <div class="ld-container ld-container--narrow">
 
         {{-- Header --}}
-        <div style="margin-bottom: 2rem;" data-animate="fadeUp">
-            <a href="{{ route('dasbor.warga') }}" style="font-size: 0.875rem; color: var(--ld-cobalt); text-decoration: none; display: inline-flex; align-items: center; gap: 0.375rem; margin-bottom: 1.5rem;">
-                ← Kembali ke Dasbor
-            </a>
-            <h1 style="font-family: var(--ld-font-display); font-size: 1.875rem; font-weight: 800; color: var(--ld-text); letter-spacing: -0.02em;">Buat Laporan Baru</h1>
-            <p style="color: var(--ld-text-muted); margin-top: 0.5rem;">Lengkapi formulir di bawah. AI kami akan menganalisis foto dan menentukan prioritas secara otomatis.</p>
-        </div>
-
-        {{-- AI Info Banner --}}
-        <div class="ld-ai-badge" style="display: flex; margin-bottom: 1.5rem; width: fit-content;" data-animate="fadeUp" data-delay="0.1">
-            Gemini AI akan menganalisis foto Anda secara otomatis — validasi + prioritas SLA
+        <div class="ld-header-section" data-animate="fadeUp">
+            <a href="{{ url()->previous() }}" class="ld-btn ld-btn--ghost ld-btn--back ld-btn-back-link">
+               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                </svg>
+                Kembali
+            </a> 
+            <h1 class="ld-page-title">Buat Laporan Baru</h1>
+            <p class="ld-page-subtitle">Lengkapi formulir di bawah. AI kami akan menganalisis foto dan menentukan prioritas secara otomatis.</p>
         </div>
 
         {{-- Form --}}
         <form method="POST" action="{{ route('laporan.kirim') }}" enctype="multipart/form-data">
             @csrf
 
-            {{-- BAGIAN 1: Info Laporan --}}
-            <div class="ld-card" style="margin-bottom: 1.5rem;" data-animate="fadeUp" data-delay="0.15">
+            <div class="ld-card ld-card--mb" data-animate="fadeUp" data-delay="0.15">
                 <div class="ld-card__header">
                     <div>
-                        <h2 style="font-family: var(--ld-font-display); font-size: 1rem; font-weight: 700;">📋 Informasi Laporan</h2>
-                        <p style="font-size: 0.8rem; color: var(--ld-text-muted); margin-top: 2px;">Deskripsikan kerusakan yang Anda temukan</p>
+                        <h2 class="ld-section-title">Informasi Laporan</h2>
+                        <p class="ld-section-subtitle">Deskripsikan kerusakan yang Anda temukan</p>
                     </div>
                 </div>
-                <div class="ld-card__body" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                <div class="ld-card__body ld-card-body--stacked">
 
                     <div class="ld-form-group">
                         <label for="judul" class="ld-label">Judul Laporan <span>*</span></label>
@@ -43,7 +40,7 @@
 
                     <div class="ld-form-group">
                         <label for="deskripsi" class="ld-label">Deskripsi Kerusakan <span>*</span></label>
-                        <textarea id="deskripsi" name="deskripsi" rows="4"
+                        <textarea id="deskripsi" name="deskripsi" rows="5"
                             class="ld-textarea {{ $errors->has('deskripsi') ? 'ld-input--error' : '' }}"
                             placeholder="Jelaskan kondisi kerusakan, ukuran perkiraan, dampak terhadap pengendara, dll. (min. 20 karakter)" required minlength="20" maxlength="2000">{{ old('deskripsi') }}</textarea>
                         @error('deskripsi')<span class="ld-error-msg">{{ $message }}</span>@enderror
@@ -51,22 +48,31 @@
                 </div>
             </div>
 
-            {{-- BAGIAN 2: Lokasi --}}
-            <div class="ld-card" style="margin-bottom: 1.5rem;" data-animate="fadeUp" data-delay="0.2">
+            <div class="ld-card ld-card--mb" data-animate="fadeUp" data-delay="0.2">
                 <div class="ld-card__header">
                     <div>
-                        <h2 style="font-family: var(--ld-font-display); font-size: 1rem; font-weight: 700;">📍 Lokasi Kejadian</h2>
+                        <h2 class="ld-section-title">Lokasi Kejadian</h2>
                     </div>
-                    <button type="button" id="tombolAmbilLokasi" class="ld-btn ld-btn--ghost ld-btn--sm"
-                        style="background: rgba(53,117,175,0.08); border-color: rgba(53,117,175,0.2); color: var(--ld-cobalt);">
-                        📡 Ambil Lokasi GPS
+                    <button type="button" id="tombolAmbilLokasi" class="ld-btn ld-btn--primer ld-btn--gps">
+                        Ambil Lokasi GPS
                     </button>
                 </div>
-                <div class="ld-card__body" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                <div class="ld-card__body ld-card-body--stacked">
 
-                    <p id="statusGPS" style="font-size: 0.8125rem; color: var(--ld-text-muted);"></p>
+                    <p id="statusGPS" class="ld-gps-status"></p>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    {{-- Fitur Peta Interaktif --}}
+                    <div class="ld-map-container">
+                        <label class="ld-label">Cari atau Geser Pin pada Peta</label>
+                        <div class="ld-map-search-wrap">
+                            <input type="text" id="mapSearchInput" class="ld-input" placeholder="Ketik nama jalan atau daerah...">
+                            <button type="button" id="btnSearchMap" class="ld-btn ld-btn--primer ">Cari</button>
+                        </div>
+                        <div id="mapLocation" class="ld-map-view"></div>
+                        <p class="ld-map-instruction">Klik atau tarik pin biru di atas untuk menentukan titik persis kerusakan.</p>
+                    </div>
+
+                    <div class="ld-grid-half ld-mt-1rem">
                         <div class="ld-form-group">
                             <label for="latitude" class="ld-label">Latitude <span>*</span></label>
                             <input type="number" id="latitude" name="latitude" value="{{ old('latitude') }}"
@@ -91,7 +97,7 @@
                         @error('alamat_lengkap')<span class="ld-error-msg">{{ $message }}</span>@enderror
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="ld-grid-half">
                         <div class="ld-form-group">
                             <label for="kelurahan" class="ld-label">Kelurahan <span>*</span></label>
                             <input type="text" id="kelurahan" name="kelurahan" value="{{ old('kelurahan') }}"
@@ -104,7 +110,7 @@
                         </div>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                    <div class="ld-grid-third">
                         <div class="ld-form-group">
                             <label for="kota" class="ld-label">Kota/Kabupaten <span>*</span></label>
                             <input type="text" id="kota" name="kota" value="{{ old('kota') }}"
@@ -124,25 +130,28 @@
                 </div>
             </div>
 
-            {{-- BAGIAN 3: Upload Foto --}}
-            <div class="ld-card" style="margin-bottom: 2rem;" data-animate="fadeUp" data-delay="0.25">
+            <div class="ld-card ld-card--mb-lg" data-animate="fadeUp" data-delay="0.25">
                 <div class="ld-card__header">
                     <div>
-                        <h2 style="font-family: var(--ld-font-display); font-size: 1rem; font-weight: 700;">📸 Foto Bukti Kerusakan</h2>
-                        <p style="font-size: 0.8rem; color: var(--ld-text-muted); margin-top: 2px;">1-5 foto · Max 5MB per foto · JPG/PNG/WebP</p>
+                        <h2 class="ld-section-title">Foto Bukti Kerusakan</h2>
+                        <p class="ld-section-subtitle">1-5 foto · Max 5MB per foto · JPG/PNG/WebP</p>
                     </div>
-                    <div class="ld-ai-badge" style="font-size: 0.75rem;">AI akan menganalisis</div>
                 </div>
 
                 <div class="ld-card__body">
                     <div class="ld-upload-area">
                         <input type="file" name="foto_sebelum" id="inputFoto" accept="image/*" class="sr-only">
                         <div class="ld-upload-teks">
-                            <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">🖼️</div>
-                            <p style="font-weight: 600; color: var(--ld-text); margin-bottom: 0.25rem;">Klik atau seret foto ke sini</p>
-                            <p style="font-size: 0.8125rem; color: var(--ld-text-muted);">Foto yang jelas membantu AI menganalisis lebih akurat</p>
+                            <div class="ld-upload-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="#234A89" class="bi bi-image" viewBox="0 0 16 16">
+                                  <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                                  <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z"/>
+                                </svg>
+                            </div>
+                            <p class="ld-upload-title">Klik atau seret foto ke sini</p>
+                            <p class="ld-upload-subtitle">Foto yang jelas membantu AI menganalisis lebih akurat</p>
                         </div>
-                        <div class="ld-upload-preview" style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem;"></div>
+                        <div class="ld-upload-preview ld-upload-preview-container"></div>
                     </div>
                     @error('foto_sebelum')<span class="ld-error-msg mt-2 block">{{ $message }}</span>@enderror
                     @error('foto_sebelum.*')<span class="ld-error-msg mt-2 block">{{ $message }}</span>@enderror
@@ -150,42 +159,13 @@
             </div>
 
             {{-- Submit --}}
-            <div style="display: flex; gap: 1rem; align-items: center; justify-content: flex-end;" data-animate="fadeUp" data-delay="0.3">
+            <div class="ld-form-actions" data-animate="fadeUp" data-delay="0.3">
                 <a href="{{ route('dasbor.warga') }}" class="ld-btn ld-btn--ghost">Batal</a>
                 <button type="submit" class="ld-btn ld-btn--primer ld-btn--lg">
-                    🚀 Kirim Laporan
+                    Kirim Laporan
                 </button>
             </div>
         </form>
     </div>
 </div>
-
-@push('styles')
-<style>
-.ld-upload-preview__item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
-}
-.ld-upload-preview__item img {
-    width: 96px;
-    height: 96px;
-    object-fit: cover;
-    border-radius: 10px;
-    border: 2px solid var(--ld-icy);
-}
-.ld-upload-preview__label {
-    font-size: 0.6875rem;
-    color: var(--ld-text-muted);
-}
-.sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0,0,0,0);
-}
-</style>
-@endpush
 @endsection

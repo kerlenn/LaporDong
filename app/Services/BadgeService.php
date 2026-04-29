@@ -9,43 +9,43 @@ use Illuminate\Support\Facades\Log;
 class BadgeService
 {
     private const DAFTAR_BADGE = [
-        [
-            'nama'            => 'Pengamat Jalan',
-            'deskripsi'       => 'Berhasil mengirim laporan pertama',
-            'ikon'            => '🚀',
-            'warna'           => '#4FB0F5',
-            'syarat_laporan'  => 1,
-            'syarat_poin'     => 0,
-            'tipe'            => 'laporan',
-        ],
-        [
-            'nama'            => 'Pelapor Aktif',
-            'deskripsi'       => 'Mengirim 5 laporan kerusakan jalan',
-            'ikon'            => '🏙️',
-            'warna'           => '#3575AF',
-            'syarat_laporan'  => 5,
-            'syarat_poin'     => 0,
-            'tipe'            => 'laporan',
-        ],
-        [
-            'nama'            => 'Penjaga Jalanan',
-            'deskripsi'       => 'Mengumpulkan 1000 poin kontribusi',
-            'ikon'            => '🦸',
-            'warna'           => '#234A89',
-            'syarat_laporan'  => 0,
-            'syarat_poin'     => 1000,
-            'tipe'            => 'poin',
-        ],
-        [
-            'nama'            => 'Pahlawan Negara',
-            'deskripsi'       => 'Mengirim 20 laporan yang selesai ditangani',
-            'ikon'            => '🛡️',
-            'warna'           => '#7BCFF5',
-            'syarat_laporan'  => 20,
-            'syarat_poin'     => 0,
-            'tipe'            => 'laporan',
-        ],
-    ];
+            [
+                'nama'            => 'Pengamat Jalan',
+                'deskripsi'       => 'Level 1',
+                'ikon'            => 'images/Pengamat_Jalan.png',
+                'warna'           => '#4FB0F5',
+                'syarat_laporan'  => 0,
+                'syarat_poin'     => 0,
+                'tipe'            => 'laporan',
+            ],
+            [
+                'nama'            => 'Pelapor Aktif',
+                'deskripsi'       => 'Level 2',
+                'ikon'            => 'images/Pelapor_Aktif.png',
+                'warna'           => '#3575AF',
+                'syarat_laporan'  => 5,
+                'syarat_poin'     => 0,
+                'tipe'            => 'laporan',
+            ],
+            [
+                'nama'            => 'Penjaga Jalanan',
+                'deskripsi'       => 'Level 3',
+                'ikon'            => 'images/Penjaga_Jalanan.png',
+                'warna'           => '#234A89',
+                'syarat_laporan'  => 10,
+                'syarat_poin'     => 0,
+                'tipe'            => 'poin',
+            ],
+            [
+                'nama'            => 'Pahlawan Negara',
+                'deskripsi'       => 'Level 4',
+                'ikon'            => 'images/Pahlawan_Negara.png',
+                'warna'           => '#7BCFF5',
+                'syarat_laporan'  => 20,
+                'syarat_poin'     => 0,
+                'tipe'            => 'laporan',
+            ],
+        ];
 
     public function periksaBadgeBaru(User $user): array
     {

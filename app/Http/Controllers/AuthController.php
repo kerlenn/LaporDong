@@ -87,9 +87,11 @@ class AuthController extends Controller
 
     private function arahanSesuaiPeran(User $pengguna): RedirectResponse
     {
-        return match ($pengguna->peran) {
-            User::PERAN_ADMIN, User::PERAN_PETUGAS => redirect()->route('admin.dasbor'),
-            default                                 => redirect()->route('dasbor.warga'),
+        $peran = strtolower($pengguna->peran);
+
+        return match ($peran) {
+            'admin', 'petugas' => redirect()->route('admin.dasbor'),
+            default            => redirect()->route('dasbor.warga'),
         };
     }
 }

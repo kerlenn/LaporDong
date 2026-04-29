@@ -61,10 +61,10 @@ class LaporanController extends Controller
         ]);
 
         $laporan = $this->laporanService->buatLaporan(
-    auth()->user(),
-    $validated,
-    [$request->file('foto_sebelum')]
-);
+            auth()->user(),
+            $validated,
+            [$request->file('foto_sebelum')]
+        );
 
         return redirect()
             ->route('laporan.detail', $laporan)
@@ -76,10 +76,14 @@ class LaporanController extends Controller
     // ----------------------------------------------------------------
     public function detail(Laporan $laporan)
     {
-        // Warga hanya bisa lihat laporan mereka sendiri; admin/petugas bisa semua
-        if (auth()->user()->peran === 'warga' && $laporan->pelapor_id !== auth()->id()) {
+        // KODE YANG LAMA SAYA HAPUS/COMMENT DI SINI:
+        // Pengecekan ini yang bikin akun lain kena error 403.
+        // Sekarang karena dihapus, SIAPAPUN (akun lain) bisa melihat detail laporannya.
+        
+        /* if (auth()->check() && auth()->user()->peran === 'warga' && $laporan->pelapor_id !== auth()->id()) {
             abort(403, 'Kamu tidak memiliki akses ke laporan ini.');
-        }
+        } 
+        */
 
         $laporan->load(['pelapor', 'petugas', 'riwayatStatus', 'ulasan']);
 
@@ -91,6 +95,7 @@ class LaporanController extends Controller
     // ----------------------------------------------------------------
     public function formUlasan(Laporan $laporan)
     {
+        // Fitur ulasan tetap dibatasi, HANYA PEMILIK laporan yang bisa kasih ulasan
         if ($laporan->pelapor_id !== auth()->id()) {
             abort(403);
         }
@@ -111,6 +116,7 @@ class LaporanController extends Controller
     // ----------------------------------------------------------------
     public function simpanUlasan(Request $request, Laporan $laporan)
     {
+        // Validasi ulasan juga tetap hanya untuk pemilik laporan
         if ($laporan->pelapor_id !== auth()->id()) {
             abort(403);
         }
@@ -118,18 +124,16 @@ class LaporanController extends Controller
         $request->validate([
             'bintang'   => 'required|integer|min:1|max:5',
             'komentar'  => 'nullable|string|max:1000',
-            'is_anonim' => 'sometimes|boolean',
         ]);
 
         $laporan->ulasan()->create([
             'pelapor_id' => auth()->id(),
             'bintang'    => $request->bintang,
             'komentar'   => $request->komentar,
-            'is_anonim'  => $request->boolean('is_anonim'),
         ]);
 
         return redirect()
             ->route('laporan.detail', $laporan)
-            ->with('sukses', 'Terima kasih! Ulasanmu telah disimpan. 🌟');
+            ->with('sukses', 'Terima kasih! Ulasanmu telah disimpan.');
     }
 }

@@ -101,50 +101,42 @@ return view('pages.admin.daftar-laporan', compact('laporan', 'semuaPetugas'));
         return back()->with('sukses', 'Status laporan berhasil diperbarui.');
     }
 
-    /**
-     * Tugaskan laporan ke petugas lapangan.
-     */
-    public function tugaskanPetugas(Request $request, Laporan $laporan): RedirectResponse
+    public function prosesLaporan(Laporan $laporan): RedirectResponse
     {
-        $request->validate([
-            'petugas_id' => 'required|exists:users,id',
-            'catatan'    => 'nullable|string|max:500',
-        ]);
-
-        $laporan->update(['petugas_id' => $request->petugas_id]);
-
         $this->laporanService->perbaruiStatus(
             $laporan,
             Laporan::STATUS_DIPROSES,
             Auth::user(),
-            $request->catatan ?? 'Laporan ditugaskan ke petugas lapangan.'
+            'Laporan mulai diproses.'
         );
 
-        return back()->with('sukses', 'Petugas berhasil ditugaskan.');
+        return back()->with('sukses', 'Laporan sedang diproses.');
     }
 
-    /**
-     * Petugas mengunggah foto sesudah & menyelesaikan laporan.
-     */
     public function selesaikanLaporan(Request $request, Laporan $laporan): RedirectResponse
     {
         $request->validate([
             'foto_sesudah'   => 'required|array|min:1|max:5',
             'foto_sesudah.*' => 'image|mimes:jpeg,png,webp|max:5120',
-            'catatan_petugas' => 'nullable|string|max:1000',
+            'catatan'        => 'nullable|string|max:1000',
         ]);
 
+        // Upload foto
         $this->laporanService->unggahFotoSesudah($laporan, $request->file('foto_sesudah'));
 
-        $laporan->update(['catatan_petugas' => $request->catatan_petugas]);
+        // Simpan catatan
+        $laporan->update([
+            'catatan_petugas' => $request->catatan
+        ]);
 
+        // Update status ke selesai
         $this->laporanService->perbaruiStatus(
             $laporan,
             Laporan::STATUS_SELESAI,
             Auth::user(),
-            'Perbaikan selesai dilakukan di lapangan.'
+            'Perbaikan selesai dilakukan.'
         );
 
-        return back()->with('sukses', 'Laporan berhasil diselesaikan! Pelapor akan mendapatkan notifikasi.');
+        return back()->with('sukses', 'Laporan berhasil diselesaikan!');
     }
 }

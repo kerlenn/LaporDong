@@ -14,6 +14,7 @@
     <!-- Styles -->
     <link rel="stylesheet" href="<?php echo e(asset('css/app.css')); ?>">
     <link rel="stylesheet" href="<?php echo e(asset('css/lapordong.css')); ?>">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 
     <?php echo $__env->yieldPushContent('styles'); ?>
 </head>
@@ -43,23 +44,34 @@
                     <a href="<?php echo e(route('masuk')); ?>" class="ld-btn ld-btn--ghost">Masuk</a>
                     <a href="<?php echo e(route('daftar')); ?>" class="ld-btn ld-btn--primer">Daftar</a>
                 <?php else: ?>
-                    <div class="ld-nav__profil" id="menuProfilToggle">
-                        <img src="<?php echo e(Auth::user()->avatar_url); ?>" alt="Profil" class="ld-nav__avatar">
-                        <span class="ld-nav__nama"><?php echo e(Str::words(Auth::user()->nama_lengkap, 1, '')); ?></span>
+                    <div class="ld-profil-gradient-wrapper">
+                        <div class="ld-nav__profil ld-profil-inner" id="menuProfilToggle">
+                            <img src="<?php echo e(Auth::user()->avatar_url); ?>" alt="Profil" class="ld-nav__avatar">
+                            <span class="ld-nav__nama"><?php echo e(Str::words(Auth::user()->nama_lengkap, 1, '')); ?></span>
 
-                        <div class="ld-nav__dropdown" id="menuProfil">
+                            <div class="ld-nav__dropdown" id="menuProfil">
                             <div class="ld-nav__dropdown-header">
                                 <p><?php echo e(Auth::user()->nama_lengkap); ?></p>
+                            <?php if(Auth::user()->peran === 'admin'): ?>
+                                <small>Admin</small>
+                            <?php else: ?>
                                 <small><?php echo e(Auth::user()->level); ?></small>
+                            <?php endif; ?>
                             </div>
 
-                            <a href="<?php echo e(route('dasbor.warga')); ?>" class="ld-nav__dropdown-item">Dasbor</a>
+                            <?php if(Auth::user()->peran === 'admin'): ?>
+                                <a href="<?php echo e(route('admin.dasbor')); ?>" class="ld-nav__dropdown-item">Dasbor Pemerintah</a>
+                            <?php else: ?>
+                                <a href="<?php echo e(route('dasbor.warga')); ?>" class="ld-nav__dropdown-item">Dasbor</a>
+                            <?php endif; ?>
+
                             <a href="<?php echo e(route('dasbor.profil')); ?>" class="ld-nav__dropdown-item">Profil</a>
 
                             <form method="POST" action="<?php echo e(route('keluar')); ?>">
                                 <?php echo csrf_field(); ?>
-                                <button type="submit" class="ld-nav__dropdown-item danger">Keluar</button>
+                                <button type="submit" class="ld-nav__dropdown-item-keluar danger">Keluar</button>
                             </form>
+                        </div>
                         </div>
                     </div>
                 <?php endif; ?>
@@ -128,7 +140,6 @@
                 </ul>
             </div>
 
-            <!-- Account -->
             <div>
                 <h4 class="ld-footer__heading">Akun</h4>
                 <ul class="ld-footer__links">
@@ -144,9 +155,8 @@
 
         </div>
 
-        <!-- Bottom -->
         <div class="ld-footer__bottom">
-            <p>© <?php echo e(date('Y')); ?> LaporDong. Dibuat untuk Negeri Indonesia</p>
+            <p>© <?php echo e(date('Y')); ?> LaporDong. Dibuat untuk Negera Indonesia</p>
             <p class="ld-footer__tech">Dibuat oleh UCCD_KicauMania</p>
         </div>
 
@@ -155,6 +165,7 @@
 
 <!-- Scripts -->
 <script src="<?php echo e(asset('js/lapordong.js')); ?>"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <?php echo $__env->yieldPushContent('scripts'); ?>
 
 </body>

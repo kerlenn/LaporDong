@@ -74,11 +74,10 @@ class User extends Authenticatable
     public function getLevelAttribute(): string
     {
         return match (true) {
-            $this->total_poin >= 5000 => 'Pahlawan Jalan',
-            $this->total_poin >= 2000 => 'Penjaga Kota',
-            $this->total_poin >= 500  => 'Warga Aktif',
-            $this->total_poin >= 100  => 'Pelapor Baru',
-            default                   => 'Pemula',
+            $this->total_poin >= 5000 => 'Pahlawan Negara',
+            $this->total_poin >= 2000 => 'Penjaga Infrastruktur',
+            $this->total_poin >= 500  => 'Pengamat Aktif',
+            default                   => 'Pengamat Jalan',
         };
     }
 

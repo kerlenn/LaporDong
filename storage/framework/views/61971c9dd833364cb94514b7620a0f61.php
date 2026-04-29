@@ -24,8 +24,7 @@
                             'Pahlawan Negara' => '🏆',
                             'Penjaga Infrastruktur'   => '🛡️',
                             'Pelapor Aktif'    => '⭐',
-                            'Pengamat Jalan'   => '🌱',
-                            default          => '🌿',
+                            default   => '🌱',
                         };
                         ?>
                         <?php echo e($levelIcon); ?> <?php echo e($user->level); ?>
@@ -181,8 +180,7 @@ unset($__errorArgs, $__bag); ?>
                     </h2>
                     <?php
                         $levels = [
-                            ['min' => 0,    'max' => 99,   'nama' => 'Pemula',       'icon' => '🌿'],
-                            ['min' => 100,  'max' => 499,  'nama' => 'Pelapor Baru', 'icon' => '🌱'],
+                            ['min' => 0,  'max' => 499,  'nama' => 'Pengamat Jalan', 'icon' => '🌱'],
                             ['min' => 500,  'max' => 1999, 'nama' => 'Warga Aktif',  'icon' => '⭐'],
                             ['min' => 2000, 'max' => 4999, 'nama' => 'Penjaga Kota', 'icon' => '🛡️'],
                             ['min' => 5000, 'max' => 9999, 'nama' => 'Pahlawan Jalan','icon' => '🏆'],
