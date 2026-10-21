@@ -146,10 +146,3 @@ lapordong/
 
 LaporDong was developed to demonstrate how web technologies and AI-assisted features can support public infrastructure reporting. The project focuses on making reports easier to submit, organize, review, and monitor through a centralized platform.
 
-## Environment Variables
-
-Keep API keys and other sensitive configuration values in the `.env` file. Do not commit the actual `.env` file or private credentials to a public repository.
-
-## License
-
-This project is intended for educational and portfolio purposes. Check the repository's licensing terms before redistributing or using it commercially.
